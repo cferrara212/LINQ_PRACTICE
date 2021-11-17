@@ -19,7 +19,7 @@ namespace DatabaseFirstLINQ
             ProblemTwo();
             ProblemThree();
             ProblemFour();
-            //ProblemFive();
+            ProblemFive();
             //ProblemSix();
             //ProblemSeven();
             //ProblemEight();
@@ -67,7 +67,7 @@ namespace DatabaseFirstLINQ
 
             // Then print the name and price of each product from the above query to the console.
             Console.WriteLine("Problem 3");
-            foreach(var product in productsOverOnefifty)
+            foreach (var product in productsOverOnefifty)
             {
                 Console.WriteLine("Name: {0}, Price: {1}", product.Name, product.Price);
             }
@@ -77,11 +77,11 @@ namespace DatabaseFirstLINQ
         {
             // Write a LINQ query that gets each product that contains an "s" in the products name.
             var products = _context.Products;
-            var productsOverOnefifty = products.Where(p => p.Name.Contains('s'));
+            var productsOverOnefifty = products.Where(p => p.Name.Contains("s"));
 
             // Then print the name of each product from the above query to the console.
             Console.WriteLine("Problem 4");
-            foreach(var product in productsOverOnefifty)
+            foreach (var product in productsOverOnefifty)
             {
                 Console.WriteLine(product.Name);
             }
@@ -91,7 +91,15 @@ namespace DatabaseFirstLINQ
         private void ProblemFive()
         {
             // Write a LINQ query that gets all of the users who registered BEFORE 2016
+            var users = _context.Users;
+            Console.WriteLine("Problem 5");
+            DateTime twentySixteen = new DateTime(2016, 1, 1);
+            var usersRegisteredBefore2016 = users.Where(u => u.RegistrationDate < twentySixteen);
             // Then print each user's email and registration date to the console.
+            foreach (User user in usersRegisteredBefore2016)
+            {
+                Console.WriteLine("Email: {0} Registration Date: {1} ", user.Email, user.RegistrationDate);
+            }
 
         }
 
