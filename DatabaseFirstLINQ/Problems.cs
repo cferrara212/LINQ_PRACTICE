@@ -15,16 +15,16 @@ namespace DatabaseFirstLINQ
         }
         public void RunLINQQueries()
         {
-            ProblemOne();
-            ProblemTwo();
-            ProblemThree();
-            ProblemFour();
-            ProblemFive();
-            ProblemSix();
-            ProblemSeven();
-            ProblemEight();
-            ProblemNine();
-            ProblemTen();
+            //ProblemOne();
+            //ProblemTwo();
+            //ProblemThree();
+            //ProblemFour();
+            //ProblemFive();
+            //ProblemSix();
+            //ProblemSeven();
+            //ProblemEight();
+            //ProblemNine();
+            //ProblemTen();
             //ProblemEleven();
             //ProblemTwelve();
             //ProblemThirteen();
@@ -36,6 +36,7 @@ namespace DatabaseFirstLINQ
             //ProblemNineteen();
             //ProblemTwenty();
             BonusOne();
+            BonusTwo();
         }
 
         // <><><><><><><><> R Actions (Read) <><><><><><><><><>
@@ -329,6 +330,21 @@ namespace DatabaseFirstLINQ
             if (authenticated == null)
             {
                 Console.WriteLine("Invalid email or password.");
+                Console.WriteLine("Select 1 to try again\n Or select any other key to cancel");
+                var userInput = Console.ReadLine();
+                if (userInput == "1" || userInput == "2")
+                {
+                    switch (userInput)
+                        {
+                        case "1":
+                            BonusOne();
+                            break;
+                        case "2":
+                            break;
+                    
+                    }
+                }
+               
             }
             else
             {
@@ -339,6 +355,11 @@ namespace DatabaseFirstLINQ
         private void BonusTwo()
         {
             // Write a query that finds the total of every users shopping cart products using LINQ.
+            var usersCarts = _context.ShoppingCarts.Include(pu => pu.User).Include(pu => pu.Product);
+            foreach (ShoppingCart user in usersCarts)
+            {
+                Console.WriteLine("User: {0} Product: {1}", user.User.Email, user.Product.Name);
+            }
             // Display the total of each users shopping cart as well as the total of the toals to the console.
         }
 
