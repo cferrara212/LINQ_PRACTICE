@@ -35,7 +35,7 @@ namespace DatabaseFirstLINQ
             //ProblemEighteen();
             //ProblemNineteen();
             //ProblemTwenty();
-            BonusOne();
+            //BonusOne();
             BonusTwo();
         }
 
@@ -355,11 +355,14 @@ namespace DatabaseFirstLINQ
         private void BonusTwo()
         {
             // Write a query that finds the total of every users shopping cart products using LINQ.
-            var usersCarts = _context.ShoppingCarts.Include(pu => pu.User).Include(pu => pu.Product);
-            foreach (ShoppingCart user in usersCarts)
-            {
-                Console.WriteLine("User: {0} Product: {1}", user.User.Email, user.Product.Name);
+            var shoppingCartRows = _context.ShoppingCarts.Include(pu => pu.User).Include(pu => pu.Product).ToList();
+            var allCartTotal = _context.ShoppingCarts.Include(c => c.Product).Select(c=> c.Product.Price).ToList().Sum();
+            var users = _context.Users.ToList();
+            foreach (User user in users) {
+                var userCartTotal = _context.ShoppingCarts.Include(ci => ci.Product).Where(ci => ci.UserId == user.Id).Select(ci => ci.Product.Price).Sum();
+                Console.WriteLine(userCartTotal);
             }
+            Console.WriteLine(allCartTotal);
             // Display the total of each users shopping cart as well as the total of the toals to the console.
         }
 
