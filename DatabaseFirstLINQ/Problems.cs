@@ -25,12 +25,12 @@ namespace DatabaseFirstLINQ
             ProblemEight();
             ProblemNine();
             ProblemTen();
-            //ProblemEleven();
-            //ProblemTwelve();
-            //ProblemThirteen();
-            //ProblemFourteen();
-            //ProblemFifteen();
-            //ProblemSixteen();
+            ProblemEleven();
+            ProblemTwelve();
+            ProblemThirteen();
+            ProblemFourteen();
+            ProblemFifteen();
+            ProblemSixteen();
             //ProblemSeventeen();
             //ProblemEighteen();
             //ProblemNineteen();
@@ -167,12 +167,12 @@ namespace DatabaseFirstLINQ
             // Then print the user's email as well as the product's name, price, and quantity to the console.
 
             Console.WriteLine("\n-------Problem 10-------\n");
-            var employeeUsers = _context.UserRoles.Include(ur => ur.Role).Include(ur => ur.User).Where(ur => ur.Role.RoleName == "Employee").Select(ur => ur.User.Email).ToList();
-            var shoppingCarts = _context.ShoppingCarts.Include(sc => sc.Product).Include(sc => sc.User).Where(sc => employeeUsers.Contains(sc.User.Email));
+            var employeeUsers = _context.UserRoles.Include(ur => ur.Role).Include(ur => ur.User).Where(ur => ur.Role.RoleName == "Employee").Select(ur => ur.User.Id).ToList();
+            var shoppingCarts = _context.ShoppingCarts.Include(sc => sc.Product).Include(sc => sc.User).Where(sc => employeeUsers.Contains(sc.User.Id));
 
             foreach (ShoppingCart item in shoppingCarts)
             {
-                Console.WriteLine("Name: {0}\nPrice: {1}\nQuantity: {2}", item.Product.Name, item.Product.Price, item.Quantity);
+                Console.WriteLine("Email: {0} Name: {1}\nPrice: {2}\nQuantity: {3}", item.User.Email, item.Product.Name, item.Product.Price, item.Quantity);
             }
 
         }
@@ -183,6 +183,7 @@ namespace DatabaseFirstLINQ
 
         private void ProblemEleven()
         {
+            Console.WriteLine("\n-------Problem 11-------\n");
             // Create a new User object and add that user to the Users table using LINQ.
             User newUser = new User()
             {
@@ -195,6 +196,7 @@ namespace DatabaseFirstLINQ
 
         private void ProblemTwelve()
         {
+            Console.WriteLine("\n-------Problem 12-------\n");
             // Create a new Product object and add that product to the Products table using LINQ.
             Product newProduct = new Product()
             {
@@ -208,6 +210,7 @@ namespace DatabaseFirstLINQ
 
         private void ProblemThirteen()
         {
+            Console.WriteLine("\n-------Problem 13-------\n");
             // Add the role of "Customer" to the user we just created in the UserRoles junction table using LINQ.
             var roleId = _context.Roles.Where(r => r.RoleName == "Customer").Select(r => r.Id).SingleOrDefault();
             var userId = _context.Users.Where(u => u.Email == "david@gmail.com").Select(u => u.Id).SingleOrDefault();
@@ -222,14 +225,25 @@ namespace DatabaseFirstLINQ
 
         private void ProblemFourteen()
         {
+            Console.WriteLine("\n-------Problem 14-------\n");
             // Add the product you create to the user we created in the ShoppingCart junction table using LINQ.
-
+            var product = _context.Products.Where(p => p.Name == "EastBlue Dog Chew Toy").SingleOrDefault();
+            var user = _context.Users.Where(u => u.Email == "david@gmail.com").SingleOrDefault();
+            ShoppingCart newShoppingCart = new ShoppingCart()
+            {
+                UserId = user.Id,
+                ProductId = product.Id,
+                Quantity = 1,
+            };
+            _context.ShoppingCarts.Add(newShoppingCart);
+            _context.SaveChanges();
         }
 
         // <><> U Actions (Update) <><>
 
         private void ProblemFifteen()
         {
+            Console.WriteLine("\n-------Problem 15-------\n");
             // Update the email of the user we created to "mike@gmail.com"
             var user = _context.Users.Where(u => u.Email == "david@gmail.com").SingleOrDefault();
             user.Email = "mike@gmail.com";
@@ -239,7 +253,9 @@ namespace DatabaseFirstLINQ
 
         private void ProblemSixteen()
         {
+            Console.WriteLine("\n-------Problem 16-------\n");
             // Update the price of the product you created to something different using LINQ.
+
 
         }
 
