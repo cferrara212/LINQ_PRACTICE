@@ -25,11 +25,11 @@ namespace DatabaseFirstLINQ
             ProblemEight();
             ProblemNine();
             ProblemTen();
-            ProblemEleven();
-            ProblemTwelve();
-            ProblemThirteen();
-            ProblemFourteen();
-            ProblemFifteen();
+            //ProblemEleven();
+            //ProblemTwelve();
+            //ProblemThirteen();
+            //ProblemFourteen();
+            //ProblemFifteen();
             ProblemSixteen();
             //ProblemSeventeen();
             //ProblemEighteen();
@@ -255,7 +255,11 @@ namespace DatabaseFirstLINQ
         {
             Console.WriteLine("\n-------Problem 16-------\n");
             // Update the price of the product you created to something different using LINQ.
+            var product = _context.Products.Where(p => p.Name == "EastBlue Dog Chew Toy").SingleOrDefault();
 
+            product.Price = 999;
+            _context.Products.Update(product);
+            _context.SaveChanges();
 
         }
 
