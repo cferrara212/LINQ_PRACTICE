@@ -390,36 +390,20 @@ namespace DatabaseFirstLINQ
                     switch (userInput)
                     {
                         case "1":
-
                             BonusThree();
                             break;
                         case "2":
                             break;
                         default:
                             break;
-
                     }
                 }
-
             }
             else
             {
                 mainMenu(authenticatedUser);
-
             }
         }
-
-
-        // 2. If the user succesfully signs in
-        // a. Give them a menu where they perform the following actions within the console
-        // View the products in their shopping cart
-        // View all products in the Products table
-        // Add a product to the shopping cart (incrementing quantity if that product is already in their shopping cart)
-        // Remove a product from their shopping cart
-        // 3. If the user does not succesfully sing in
-        // a. Display "Invalid Email or Password"
-        // b. Re-prompt the user for credentials
-
 
         private void mainMenu(User user)
         {
@@ -433,12 +417,13 @@ namespace DatabaseFirstLINQ
                     shoppingCartSubmenu(user);
                     break;
                 case "2":
-                    Console.WriteLine("\n-------Products For Sale-------\n");
+                    productSubmenu(user);
                     break;
                 default:
                     break;
             }
         }
+
         private void shoppingCartSubmenu(User user)
         {
             var shoppingCartItems = _context.ShoppingCarts.Include(ci => ci.Product).Where(ci => ci.UserId == user.Id).ToList();
@@ -471,6 +456,56 @@ namespace DatabaseFirstLINQ
             }
             Console.WriteLine("");
             Console.WriteLine("");
+        }
+
+        // View all products in the Products table
+        // Add a product to the shopping cart (incrementing quantity if that product is already in their shopping cart)
+        private void productSubmenu(User user)
+        {
+            var shoppingCartItems = _context.ShoppingCarts.Include(ci => ci.Product).Where(ci => ci.UserId == user.Id).ToList();
+            Console.WriteLine("\n-------Products For Sale-------\n");
+            var products = _context.Products.ToList();
+            int index = 0;
+            foreach (var product in products)
+            {
+                Console.WriteLine($"{index}: Name, {product.Name} Price, {product.Price}");
+                index++;
+            }
+            Console.WriteLine("Press 1 to select a product, Press 2 to go back to main menu");
+            string userInput = Console.ReadLine();
+            switch (userInput)
+            {
+                case "1":
+                    Console.WriteLine("Enter the item number you would like to add");
+                    int itemIndex = int.Parse(Console.ReadLine());
+                    var selectedItem = products[itemIndex];
+                    var existingShoppingCartItem = _context.ShoppingCarts.Where(ci => ci.ProductId == selectedItem.Id && ci.UserId == user.Id).SingleOrDefault();
+                    if (existingShoppingCartItem != null)
+                    {
+                        existingShoppingCartItem.Quantity++;
+                        _context.ShoppingCarts.Update(existingShoppingCartItem);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        var newShoppingCartItem = new ShoppingCart()
+                        {
+                            UserId = user.Id,
+                            ProductId = selectedItem.Id,
+                            Quantity = 1,
+                        };
+                        _context.ShoppingCarts.Add(newShoppingCartItem);
+                        _context.SaveChanges();
+                    }
+                    productSubmenu(user);
+                    break;
+                case "2":
+                    mainMenu(user);
+                    break;
+                default:
+                    productSubmenu(user);
+                    break;
+            }
         }
     }
 }
