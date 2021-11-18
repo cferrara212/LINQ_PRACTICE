@@ -460,11 +460,13 @@ namespace DatabaseFirstLINQ
                     var itemToRemove = _context.ShoppingCarts.Where(ci => ci.ProductId == selectedItem.ProductId && ci.UserId == selectedItem.UserId).SingleOrDefault();
                     _context.ShoppingCarts.Remove(itemToRemove);
                     _context.SaveChanges();
+                    shoppingCartSubmenu(user);
                     break;
                 case "2":
                     mainMenu(user);
                     break;
                 default:
+                    shoppingCartSubmenu(user);
                     break;
             }
             Console.WriteLine("");
