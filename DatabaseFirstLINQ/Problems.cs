@@ -36,7 +36,8 @@ namespace DatabaseFirstLINQ
             //ProblemNineteen();
             //ProblemTwenty();
             //BonusOne();
-            BonusTwo();
+            //BonusTwo();
+            BonusThree();
         }
 
         // <><><><><><><><> R Actions (Read) <><><><><><><><><>
@@ -335,16 +336,16 @@ namespace DatabaseFirstLINQ
                 if (userInput == "1" || userInput == "2")
                 {
                     switch (userInput)
-                        {
+                    {
                         case "1":
                             BonusOne();
                             break;
                         case "2":
                             break;
-                    
+
                     }
                 }
-               
+
             }
             else
             {
@@ -356,31 +357,118 @@ namespace DatabaseFirstLINQ
         {
             // Write a query that finds the total of every users shopping cart products using LINQ.
             var shoppingCartRows = _context.ShoppingCarts.Include(pu => pu.User).Include(pu => pu.Product).ToList();
-            var allCartTotal = _context.ShoppingCarts.Include(c => c.Product).Select(c=> c.Product.Price).ToList().Sum();
-            var users = _context.Users.ToList();
-            foreach (User user in users) {
+            var allCartTotal = _context.ShoppingCarts.Include(c => c.Product).Select(c => c.Product.Price).ToList().Sum();
+            var users = _context.Users;
+            foreach (User user in users)
+            {
                 var userCartTotal = _context.ShoppingCarts.Include(ci => ci.Product).Where(ci => ci.UserId == user.Id).Select(ci => ci.Product.Price).Sum();
-                Console.WriteLine(userCartTotal);
+                Console.WriteLine("User:{0} Cart Total:{1}", user.Email, userCartTotal);
             }
-            Console.WriteLine(allCartTotal);
+            Console.WriteLine("The total of all carts is {0}", allCartTotal);
             // Display the total of each users shopping cart as well as the total of the toals to the console.
         }
 
         // BIG ONE
         private void BonusThree()
         {
-            // 1. Create functionality for a user to sign in via the console
-            // 2. If the user succesfully signs in
-            // a. Give them a menu where they perform the following actions within the console
-            // View the products in their shopping cart
-            // View all products in the Products table
-            // Add a product to the shopping cart (incrementing quantity if that product is already in their shopping cart)
-            // Remove a product from their shopping cart
-            // 3. If the user does not succesfully sing in
-            // a. Display "Invalid Email or Password"
-            // b. Re-prompt the user for credentials
 
+            Console.WriteLine("\n\t\tBONUS 3\t\t\n");
+
+            Console.WriteLine("Enter email address:");
+            string emailAddress = Console.ReadLine();
+            Console.WriteLine("Enter password:");
+            string password = Console.ReadLine();
+
+            var authenticatedUser = _context.Users.Where(u => u.Email == emailAddress && u.Password == password).SingleOrDefault();
+            if (authenticatedUser == null)
+            {
+                Console.WriteLine("Invalid email or password.");
+                Console.WriteLine("Select 1 to try again\n Or select any other key to cancel");
+                var userInput = Console.ReadLine();
+                if (userInput == "1" || userInput == "2")
+                {
+                    switch (userInput)
+                    {
+                        case "1":
+
+                            BonusThree();
+                            break;
+                        case "2":
+                            break;
+                        default:
+                            break;
+
+                    }
+                }
+
+            }
+            else
+            {
+                mainMenu(authenticatedUser);
+
+            }
         }
 
+
+        // 2. If the user succesfully signs in
+        // a. Give them a menu where they perform the following actions within the console
+        // View the products in their shopping cart
+        // View all products in the Products table
+        // Add a product to the shopping cart (incrementing quantity if that product is already in their shopping cart)
+        // Remove a product from their shopping cart
+        // 3. If the user does not succesfully sing in
+        // a. Display "Invalid Email or Password"
+        // b. Re-prompt the user for credentials
+
+
+        private void mainMenu(User user)
+        {
+
+            Console.WriteLine("Signed In!");
+            Console.WriteLine("your options are as follows.\n 1 for View Shopping Cart:\n 2 for View Products For Sale\n");
+            var userInput = Console.ReadLine();
+            switch (userInput)
+            {
+                case "1":
+                    shoppingCartSubmenu(user);
+                    break;
+                case "2":
+                    Console.WriteLine("\n-------Products For Sale-------\n");
+                    break;
+                default:
+                    break;
+            }
+        }
+        private void shoppingCartSubmenu(User user)
+        {
+            var shoppingCartItems = _context.ShoppingCarts.Include(ci => ci.Product).Where(ci => ci.UserId == user.Id).ToList();
+            Console.WriteLine("\n-------Your Shopping Cart-------\n");
+            int counter = 0;
+            foreach (ShoppingCart item in shoppingCartItems)
+            {
+                Console.WriteLine($"{counter}:Name, {item.Product.Name}, Price {item.Product.Price}, Quantity {item.Quantity}");
+                counter++;
+            }
+            Console.WriteLine("If you would like to remove an item press 1\n if you would like to return to the main menu press 2");
+            var userInput = Console.ReadLine();
+            switch (userInput)
+            {
+                case "1":
+                    Console.WriteLine("enter the item number you would like to remove");
+                    int itemIndex = int.Parse(Console.ReadLine());
+                    var selectedItem = shoppingCartItems[itemIndex];
+                    var itemToRemove = _context.ShoppingCarts.Where(ci => ci.ProductId == selectedItem.ProductId && ci.UserId == selectedItem.UserId).SingleOrDefault();
+                    _context.ShoppingCarts.Remove(itemToRemove);
+                    _context.SaveChanges();
+                    break;
+                case "2":
+                    mainMenu(user);
+                    break;
+                default:
+                    break;
+            }
+            Console.WriteLine("");
+            Console.WriteLine("");
+        }
     }
 }
