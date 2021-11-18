@@ -43,7 +43,7 @@ namespace DatabaseFirstLINQ
             // Write a LINQ query that returns the number of users in the Users table.
             var users = _context.Users;
             // HINT: .ToList().Count
-            Console.WriteLine("Problem 1");
+            Console.WriteLine("-------Problem 1-------\n");
             Console.WriteLine(users.ToList().Count);
         }
 
@@ -51,7 +51,7 @@ namespace DatabaseFirstLINQ
         {
             // Write a LINQ query that retrieves the users from the User tables then print each user's email to the console.
             var users = _context.Users;
-            Console.WriteLine("Problem 2");
+            Console.WriteLine("\n-------Problem 2-------\n");
             foreach (User user in users)
             {
                 Console.WriteLine(user.Email);
@@ -66,7 +66,7 @@ namespace DatabaseFirstLINQ
             var productsOverOnefifty = products.Where(m => m.Price > 150);
 
             // Then print the name and price of each product from the above query to the console.
-            Console.WriteLine("Problem 3");
+            Console.WriteLine("\n-------Problem 3-------\n");
             foreach (var product in productsOverOnefifty)
             {
                 Console.WriteLine("Name: {0}, Price: {1}", product.Name, product.Price);
@@ -80,7 +80,7 @@ namespace DatabaseFirstLINQ
             var productsOverOnefifty = products.Where(p => p.Name.Contains("s"));
 
             // Then print the name of each product from the above query to the console.
-            Console.WriteLine("Problem 4");
+            Console.WriteLine("\n-------Problem 4-------\n");
             foreach (var product in productsOverOnefifty)
             {
                 Console.WriteLine(product.Name);
@@ -92,7 +92,7 @@ namespace DatabaseFirstLINQ
         {
             // Write a LINQ query that gets all of the users who registered BEFORE 2016
             var users = _context.Users;
-            Console.WriteLine("Problem 5");
+            Console.WriteLine("\n-------Problem 5-------\n");
             DateTime twentySixteen = new DateTime(2016, 1, 1);
             var usersRegisteredBefore2016 = users.Where(u => u.RegistrationDate < twentySixteen);
             // Then print each user's email and registration date to the console.
@@ -107,7 +107,7 @@ namespace DatabaseFirstLINQ
         {
             // Write a LINQ query that gets all of the users who registered AFTER 2016 and BEFORE 2018
             var users = _context.Users;
-            Console.WriteLine("Problem 6");
+            Console.WriteLine("\n-------Problem 6-------\n");
             DateTime twentySixteen = new DateTime(2016, 1, 1);
             DateTime twentyEighteen = new DateTime(2018, 1, 1);
             var usersRegisteredBetween20162018 = users.Where(u => u.RegistrationDate > twentySixteen && u.RegistrationDate < twentyEighteen);
@@ -127,6 +127,7 @@ namespace DatabaseFirstLINQ
         {
             // Write a LINQ query that retreives all of the users who are assigned to the role of Customer.
             // Then print the users email and role name to the console.
+            Console.WriteLine("\n-------Problem 7-------\n");
             var customerUsers = _context.UserRoles.Include(ur => ur.Role).Include(ur => ur.User).Where(ur => ur.Role.RoleName == "Customer");
             foreach (UserRole userRole in customerUsers)
             {
@@ -136,7 +137,7 @@ namespace DatabaseFirstLINQ
 
         private void ProblemEight()
         {
-            Console.WriteLine("Problem 8");
+            Console.WriteLine("\n-------Problem 8-------\n");
             // Write a LINQ query that retreives all of the products in the shopping cart of the user who has the email "afton@gmail.com".
             var aftonShoppingCart = _context.ShoppingCarts.Include(pu => pu.Product).Include(pu => pu.User).Where(pu => pu.User.Email == "afton@gmail.com");
             // Then print the product's name, price, and quantity to the console.
@@ -153,6 +154,7 @@ namespace DatabaseFirstLINQ
         private void ProblemNine()
         {
             // Write a LINQ query that retreives all of the products in the shopping cart of the user who has the email "oda@gmail.com" and returns the sum of all of the products prices.
+            Console.WriteLine("\n-------Problem 9-------\n");
             var sum = _context.ShoppingCarts.Include(sc => sc.Product).Include(sc => sc.User).Where(sc => sc.User.Email == "oda@gmail.com").Select(sc => sc.Product.Price).Sum();
             // Then print the total of the shopping cart to the console.
             Console.WriteLine("Total: {0}", sum);
@@ -164,7 +166,7 @@ namespace DatabaseFirstLINQ
             // Write a LINQ query that retreives all of the products in the shopping cart of users who have the role of "Employee".
             // Then print the user's email as well as the product's name, price, and quantity to the console.
 
-            Console.WriteLine("Problem 10");
+            Console.WriteLine("\n-------Problem 10-------\n");
             var employeeUsers = _context.UserRoles.Include(ur => ur.Role).Include(ur => ur.User).Where(ur => ur.Role.RoleName == "Employee").Select(ur => ur.User.Email).ToList();
             var shoppingCarts = _context.ShoppingCarts.Include(sc => sc.Product).Include(sc => sc.User).Where(sc => employeeUsers.Contains(sc.User.Email));
 
